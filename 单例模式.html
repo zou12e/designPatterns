@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单例模式</title>
+</head>
+<body>
+    
+    <button id="button" >按钮</button>
+    
+</body>
+<script>
+    const getSingle = function (func) {
+        var result ;
+        return function () {
+            return result || (result = func.apply(this, arguments));
+        };
+    }
+    
+    const createDiv = function () {
+        const div = document.createElement('div');
+        div.style.cssText = 'width:100px;height:100px;background:red;display:none;';
+        document.body.appendChild(div);
+        return  {
+            trigger() {
+                div.style.display = div.style.display == 'block' ? 'none' : 'block';
+            }
+        };
+    }
+
+    const createSingle = getSingle(createDiv)();
+
+    button.onclick = function () {
+        createSingle.trigger();
+    }
+     
+</script>
+</html>
