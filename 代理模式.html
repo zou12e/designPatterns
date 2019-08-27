@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代理模式</title>
+</head>
+<body>
+    <div>
+        定义：为一个对象提供一种代理以控制对这个对象的访问
+    </div>
+        
+    <script>
+
+        const people = {
+            sendFlower (target) {
+                const flower = 'sunflower';
+                target.receiveFlower(flower);
+            }
+        }
+
+        const goddness = {
+            mood: null,
+            receiveFlower (flower) {
+                console.log('receiveFlower', this.mood, flower);
+            },
+            changeMood () {
+                this.mood = Math.random() > 0.8 ? true : false;
+            },
+            createMood() {
+                this.changeMood();
+                const self = this;
+                setInterval(function () {
+                    self.changeMood();
+                }, 300)
+            }
+        }
+        goddness.createMood();
+
+        // 直接送花 可能失败， 直接访问可能还不是时候
+        people.sendFlower(goddness);
+
+        // 代理人
+        const agent = {
+            proxySendFlower (target) {
+                this.listenMood(target, () => {
+                    people.sendFlower(target);
+                });
+            },
+            listenMood (target, func) {
+                const timer = setInterval(function () {
+                    if(target.mood) { 
+                        func();
+                        clearInterval(timer);
+                    }
+                }, 500);
+            }
+        }
+        // 代理送花 必定成功， 代理访问在确定的时候访问
+        agent.proxySendFlower(goddness);
+    
+    </script>
+</body>
+</html>
