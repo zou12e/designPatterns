@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>命令模式</title>
+</head>
+<body>
+    <div>
+        定义：用来对方法调用进行参数化处理和传送，经过这样处理过的方法调用可以在任何需要的时候执行。
+    </div>
+    <button id ="b1">b1</button>
+    <button id ="b2">b2</button>
+    <script>
+        var setCommand = function(button,func) {
+            button.onclick = function(){
+                func();
+            }
+        }; 
+        var MenuBar = {
+            refersh: function(){
+                alert("刷新菜单界面");
+            }
+        };
+        var SubMenu = {
+            add: function(){
+                alert("增加菜单");
+            }
+        };
+        // 刷新菜单
+        var RefreshMenuBarCommand = function(receiver) {
+            return function(){
+                receiver.refersh();    
+            };
+        };
+        // 增加菜单
+        // var AddSubMenuCommand = function(receiver) {
+        //     return function(){
+        //         receiver.add();    
+        //     };
+        // };
+        
+        var refershMenuBarCommand = RefreshMenuBarCommand(MenuBar);
+        setCommand(b1,refershMenuBarCommand);
+
+
+        // 增加菜单
+        // var addSubMenuCommand = AddSubMenuCommand(SubMenu);
+        // setCommand(b2,addSubMenuCommand);
+    
+    </script>
+</body>
+</html>
