@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>策略模式</title>
+</head>
+<body>
+    <div>
+        定义：策略模式是指对一系列的算法定义，并将每一个算法封装起来，而且使它们还可以相互替换。策略模式让算法独立于使用它的客户而独立变化
+    </div>
+
+
+
+    <div id='show'>策略模式</div>
+    <button type='bg'>add greenBg</button>
+    <button type='cl'>add blueColor</button>
+    <button type='fs'>add fontSize</button>
+    <button type='fw'>add fontWeight</button>
+    <button type='op'>add opacity</button>
+
+    <div>
+        用户名: <input type="text" id='userDom' name='username'/>
+        <span id='showUser'></span>
+    </div>
+    <div>
+        密码: <input type="password" id='psDom' name='code'/>
+        <span id='showPs'></span>
+    </div>
+    <div>
+        邮箱: <input type="text" id='emDom' name='email'>
+        <span id='showEm'></span>    
+    </div>  
+    <div>     
+        <button id='submit'>提交</button>
+    </div>
+    <script src='./validator.js'></script>
+    
+    <script>
+        /**代理+策略一**/
+        var oDiv = document.getElementById('show');
+        var oButtonArray = document.getElementsByTagName('button');
+        function changeStyle (dom, typeArr) {
+            var typeObj = {
+                bg: ['backgroundColor', 'green'],
+                cl: ['color', 'blue'],
+                fs: ['fontSize', '24px'],
+                fw: ['fontWeight', 'bold'],
+                op: ['opacity', '0.3']
+            }
+            if (typeArr.constructor == Set) {
+                typeArr.forEach(function (ele) {
+                    dom.style[typeObj[ele][0]] = typeObj[ele][1];
+                })
+            } else {
+                dom.style[typeObj[typeArr][0]] = typeObj[typeArr][1];                
+            }
+        }
+        var ProxyRequest = function (func) {
+            var cache = new Set();
+            var timer = null;
+            return function () {
+                cache.add(this.getAttribute('type'))
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    func(oDiv, cache);
+                    cache = new Set();
+                }, 2000)
+            }
+        }
+        var realChangeStyle = ProxyRequest(changeStyle);
+        for (var i = 0; i < oButtonArray.length; i++) {
+            oButtonArray[i].onclick = realChangeStyle;
+        }
+        /****/
+
+        /**代理+策略二**/
+        submit.onclick = function () {
+            ProxyRequest();
+        }
+        function Request () {
+            console.log('send')
+        }
+
+        var validator = new Validator();
+        validator.extend({
+            isEmail: function (value, errorMsg) {
+                if (value != '' && value.indexOf('@') == -1) {
+                    return errorMsg
+                }
+                return true;
+            },
+            isPhone: function (value, errorMsg) {
+                if (value != '' && value.length != 11) {
+                    return errorMsg
+                }
+                return true;
+            }
+        })
+
+        var ProxyRequest = (function () {
+            validator.add(userDom, showUser, [{strategy: 'isNonEmpty', errorMsg: '用户名不为空'}, {strategy: 'maxLength:4', errorMsg: '用户名长度不能超过4'}]);
+            validator.add(psDom, showPs, [{strategy: 'isNonEmpty', errorMsg: '密码不能为空'}, {strategy: 'minLength:6', errorMsg: '密码长度不能小于6'}]);
+            validator.add(emDom, showEm, [{strategy: 'isNonEmpty', errorMsg: '邮箱不能为空'}, {strategy: 'isEmail', errorMsg: '邮箱格式不正确'}]);
+            return function () {
+                if (validator.start() == true) {
+                    Request();
+                }
+            }
+        })();
+        /****/
+
+    
+    </script>
+</body>
+</html>

@@ -10,9 +10,13 @@
     <div>
         定义：为一个对象提供一种代理以控制对这个对象的访问
     </div>
+
+    <div id = "demo">
+
+    </div>
         
     <script>
-
+        /**代理模式一**/
         const people = {
             sendFlower (target) {
                 const flower = 'sunflower';
@@ -59,7 +63,35 @@
         }
         // 代理送花 必定成功， 代理访问在确定的时候访问
         agent.proxySendFlower(goddness);
-    
+        /****/
+
+
+        /**代理模式二**/
+        // 1.预加载  2.懒加载
+        function MyImage (_id) {
+            const oImg = document.createElement('img');
+            this.setSrc = _src => {
+                oImg.src = _src;
+            }
+            document.getElementById(_id).appendChild(oImg);
+        }
+        const ProxyImage = (function () {
+            const oImg = new Image();
+            const oMyImage = new MyImage('demo');
+            oImg.onload = function () {
+                setTimeout(function () {
+                    oMyImage.setSrc(oImg.src);                    
+                }, 2000)
+            }
+            return function (occupySrc, src) {
+                oImg.src = src;      
+                oMyImage.setSrc(occupySrc);                      
+            }
+        })();
+        ProxyImage('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537457512697&di=6b9d60c4a27a3260612ed2fbf070a5a7&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201112%2F26%2F20111226195006_NQcMj.jpg', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537458419518&di=e2b3be122771e06068fae521f652ba7e&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F5bafa40f4bfbfbed4bd0124f7af0f736afc31f70.jpg');
+        /****/
+
+        
     </script>
 </body>
 </html>
