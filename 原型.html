@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>原型</title>
+</head>
+<body>
+    <script>
+        
+        
+        var O = {};
+        var F = function() {};
+        var f = new F();
+
+        console.log(O.constructor == Object);
+        console.log(F.constructor == Function);
+        console.log(f.constructor == F);
+        console.log(Object.constructor == Function);
+        console.log(Function.constructor == Function);
+
+        console.log("---------");
+
+        console.log(O.__proto__ == Object.prototype);
+        console.log(F.__proto__ == Function.prototype);
+        console.log(f.__proto__ == F.prototype);
+        console.log(Object.__proto__ == Function.prototype );
+        console.log(Function.__proto__ == Function.prototype);
+
+        console.log("---------");
+
+        console.log(F.prototype.__proto__ == Object.prototype);
+        console.log(Object.prototype.__proto__ == null );
+        console.log(Function.prototype.__proto__ == Object.prototype);
+
+ 
+
+        // person1.__proto__ 是什么？
+        // Person.__proto__ 是什么？
+        // Person.prototype.__proto__ 是什么？
+        // Object.__proto__ 是什么？
+        // Object.prototype__proto__ 是什么？
+
+        console.log('-----')
+
+        var animal = function(){};
+        var dog = function(){};
+
+        animal.price = 2000;
+        dog.prototype = animal;
+        var tidy = new dog();
+        console.log(dog.price) //undefined
+        console.log(tidy.price) // 2000
+
+        var dog = function(){};
+        dog.prototype.price = 2000;
+        var tidy = new dog();
+        console.log(tidy.price); // 2000
+        console.log(dog.price); //undefined
+
+        var dog = function(){};
+        var tidy = new dog();
+        tidy.price = 2000;
+        console.log(dog.price); //undefined
+
+    </script>
+</body>
+</html>
